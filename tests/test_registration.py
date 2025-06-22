@@ -1,34 +1,33 @@
-import time
-
-import pytest as pytest
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
+from generator import generate_email
 from selenium.webdriver.support import expected_conditions as EC
-
-from conftest import driver
-from locators import *
-
-
-class TestLoginAndRegistration:
-    def test_registration_valid_data(self):
-        account = WebDriverWait(driver, 3).until(
-            EC.element_to_be_clickable((By.XPATH, ".//p[text()='Личный Кабинет']")))
-        account.click()
-        time.sleep(3)
-        driver.find_element(By.XPATH, ".//a[text()='Зарегистрироваться']").click()
-        time.sleep(3)
-        driver.find_element(By.XPATH, ".//label[text()='Имя']").click()
-        driver.find_element(By.XPATH, ".//label[text()='Имя']").send_keys('Batman')
-
-        time.sleep(3)
-        driver.find_element(By.XPATH, ".//label[text()='Email']").send_keys("123@ya.ru")
-        driver.find_element((By.XPATH, ".//label[text()='Пароль']"))
+import curl
+from data_for_registration import Credential, InValidPassword
+from locators import HomePageLocators, LoginPageLocators, RegistrationPageLocators
 
 
-    def test_registration_invalid_password(self):
+def test_registration_valid_data(driver, wait):
+    test_email = generate_email()
+    wait.until(EC.element_to_be_clickable(HomePageLocators.account_link_button))
+    driver.find_element(*HomePageLocators.account_link_button).click()
+    wait.until(EC.element_to_be_clickable(LoginPageLocators.registration_link_button))
+    driver.find_element(*LoginPageLocators.registration_link_button).click()
+    driver.find_element(*RegistrationPageLocators.name_input).send_keys(Credential.name)
+    driver.find_element(*RegistrationPageLocators.email_input).send_keys(test_email)
+    driver.find_element(*RegistrationPageLocators.password_input).send_keys(Credential.password)
+    driver.find_element(*RegistrationPageLocators.registration_button).click()
+    wait.until(EC.url_to_be(curl.login_page))
+    assert driver.current_url == curl.login_page
 
 
-
-test_1 = TestLoginAndRegistration()
-test_1.test_registration()
+def test_registration_invalid_password(driver, wait):
+    test_email = generate_email()
+    wait.until(EC.element_to_be_clickable(HomePageLocators.account_link_button))
+    driver.find_element(*HomePageLocators.account_link_button).click()
+    wait.until(EC.element_to_be_clickable(LoginPageLocators.registration_link_button))
+    driver.find_element(*LoginPageLocators.registration_link_button).click()
+    driver.find_element(*RegistrationPageLocators.name_input).send_keys(InValidPassword.name)
+    driver.find_element(*RegistrationPageLocators.email_input).send_keys(test_email)
+    driver.find_element(*RegistrationPageLocators.password_input).send_keys(InValidPassword.password)
+    driver.find_element(*RegistrationPageLocators.registration_button).click()
+    wait.until(EC.url_to_be(curl.register_page))
+    assert driver.current_url == curl.register_page

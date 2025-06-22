@@ -1,17 +1,18 @@
 import pytest
 from selenium import webdriver
-from selenium.webdriver.chrome import webdriver
-from selenium.webdriver.chrome.webdriver import WebDriver
-
+from selenium.webdriver.support.ui import WebDriverWait
 import curl
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def driver():
-    driver = webdriver.Chrome
+    driver = webdriver.Chrome()
     driver.get(curl.main_page)
     driver.maximize_window()
     yield driver
     driver.quit()
 
 
+@pytest.fixture
+def wait(driver):
+    return WebDriverWait(driver, 5)

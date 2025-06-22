@@ -1,5 +1,9 @@
 
-class Credential: #созданная вручную учетка для тестирования
+class Credential: #данные для регистрации в тесте test_registration
     name = 'Ivan'
-    email = 'ananas123@yandex.ru'
-    password = 'ananas123'
+    password = 'ananas1234'
+
+
+class InValidPassword:
+    name = 'Gloria'
+    password = '123'
