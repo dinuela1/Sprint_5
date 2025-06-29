@@ -1,0 +1,6 @@
+main_page = 'https://stellarburgers.nomoreparties.site/'
+login_page = f'{main_page}login'
+order_history_page = f'{main_page}feed'
+register_page = f'{main_page}register'
+forgot_password_page = f'{main_page}forgot-password'
+account_page = f'{main_page}account/profile'
